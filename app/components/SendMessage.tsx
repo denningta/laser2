@@ -11,8 +11,6 @@ import { invoke } from "@tauri-apps/api/core"
 
 const SendMessage = () => {
   const [message, setMessage] = useState('')
-  const [response, setResponse] = useState('')
-  const [unlisten, setUnlisten] = useState<UnlistenFn | undefined>(undefined)
 
   useEffect(() => {
     listenForResponse()
@@ -36,12 +34,11 @@ const SendMessage = () => {
 
   const listenForResponse = async () => {
     console.log("listening...")
-    const unlisten = await listen<string>('tcp-response', (event) => {
+    await listen<string>('tcp-response', (event) => {
       console.log('tcp-response', event.payload)
       toast(event.payload)
     })
 
-    setUnlisten(unlisten)
   }
 
 
@@ -52,9 +49,6 @@ const SendMessage = () => {
       />
       <Button onClick={() => sendMessage()}>Send</Button>
 
-      <div>
-        {response}
-      </div>
 
     </div>
   )

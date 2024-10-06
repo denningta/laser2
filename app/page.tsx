@@ -1,12 +1,12 @@
-import Image from "next/image";
 import SendMessage from "./components/SendMessage";
-import TcpForm from "./components/TcpForm";
-import { Separator } from "@/components/ui/separator";
+import DataTable from "./components/results/data-table";
+import { columns } from "./components/results/columns";
 
 export default function Home() {
   return (
-    <div className="p-6 space-y-10">
+    <div className="space-y-10">
       <SendMessage />
+      <DataTable data={[]} columns={columns} />
 
     </div>
   );

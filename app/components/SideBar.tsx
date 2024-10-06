@@ -1,7 +1,9 @@
-import { Microchip, PcCase } from "lucide-react"
+import { Microchip, PcCase, SlidersHorizontal } from "lucide-react"
 import ConnectionStatus from "./ConnectionStatus"
 import TcpForm from "./TcpForm"
 import SerialForm from "./SerialForm"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export interface SidebarProps {
   children: React.ReactNode
@@ -20,6 +22,10 @@ export default function Sidebar() {
         isConnected={false}
         form={<SerialForm />}
       />
+      <Link href="/settings">
+        <Button><SlidersHorizontal /></Button>
+      </Link>
+
       <div className="grow"></div>
 
 
