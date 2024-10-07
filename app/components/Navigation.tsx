@@ -14,16 +14,14 @@ const Navigation = () => {
         <Breadcrumb>
           <BreadcrumbList>
             {pages.map((page, i) => (
-              <>
-                <BreadcrumbItem>
+              <div key={`breadcrumb-${i}`} className="flex items-center space-x-3">
+                <BreadcrumbItem >
                   <BreadcrumbLink href={`/${page}`}>
                     {i === 0 ? <House className="w-4 h-4" /> : page}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 {(path.length > i + 1) && <BreadcrumbSeparator />}
-
-              </>
-
+              </div>
             ))}
           </BreadcrumbList>
         </Breadcrumb>

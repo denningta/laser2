@@ -1,5 +1,8 @@
-import { Select, SelectContent, SelectTrigger } from "@/components/ui/select"
-import { SelectGroup, SelectItem, SelectLabel, SelectValue } from "@radix-ui/react-select"
+"use client"
+
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import useStore from "../hooks/useStore"
+import { useEffect, useState } from "react"
 
 export type InspectionProgram = {
   id: string
@@ -10,18 +13,30 @@ export interface SelectProgramProps {
   options: InspectionProgram[]
 }
 
-const SelectProgram = ({ options }: SelectProgramProps) => {
+const SelectProgram = () => {
+  const { get } = useStore()
+  const [programs, setPrograms] = useState<InspectionProgram[]>([])
+
+  useEffect(() => {
+    getPrograms()
+  }, [])
+
+
+  const getPrograms = async () => {
+    const prgs = await get<InspectionProgram[]>('programs')
+    setPrograms(prgs ?? [])
+
+  }
 
   return (
     <Select>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[300px]">
         <SelectValue placeholder="Select an inspeciton program" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Inspection program</SelectLabel>
-          {options.map(option => (
-            <SelectItem value={option.id}>{option.title}</SelectItem>
+          {programs.map((program, i) => (
+            <SelectItem key={i} value={program.id}>{program.title}</SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>

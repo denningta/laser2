@@ -2,7 +2,7 @@
 
 import DataTable from "../results/data-table"
 import getColumns from "./columns"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { InspectionProgram } from "../SelectProgram"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import useStore from "@/app/hooks/useStore"
 
 const formSchema = z.object({
   id: z.string(),
@@ -19,7 +20,16 @@ const formSchema = z.object({
 
 const InspectionSetup = () => {
   const [programs, setPrograms] = useState<InspectionProgram[]>([])
-  console.log(programs)
+  const { get, set } = useStore()
+
+  useEffect(() => {
+    loadPrograms()
+  }, [])
+
+  const loadPrograms = async () => {
+    const prgs = await get<InspectionProgram[]>('programs')
+    setPrograms(prgs ?? [])
+  }
 
   const form = useForm<InspectionProgram>({
     resolver: zodResolver(formSchema),
@@ -29,11 +39,11 @@ const InspectionSetup = () => {
     }
   })
 
-  const handleAddProgram = (program: InspectionProgram) => {
-    console.log(program)
+  const handleAddProgram = async (program: InspectionProgram) => {
     const array = [...programs]
     array.push(program)
     setPrograms(array)
+    await set('programs', array)
   }
 
   const updateProgram = (program: InspectionProgram) => {
@@ -45,12 +55,13 @@ const InspectionSetup = () => {
     }
   }
 
-  const deleteProgram = (program: InspectionProgram) => {
+  const deleteProgram = async (program: InspectionProgram) => {
     const array = [...programs]
     let itemIndex = array.findIndex(item => item.id === program.id)
     if (itemIndex !== -1) {
       array.splice(itemIndex, 1)
       setPrograms(array)
+      await set('programs', array)
     }
   }
 
@@ -109,7 +120,10 @@ const InspectionSetup = () => {
           </DialogContent>
         </Dialog>
       </div>
-      <DataTable columns={getColumns(deleteProgram)} data={programs} />
+      <DataTable
+        columns={getColumns({ handleDelete: deleteProgram })}
+        data={programs}
+      />
     </div>
   )
 }

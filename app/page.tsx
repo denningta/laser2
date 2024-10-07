@@ -1,13 +1,13 @@
 import SendMessage from "./components/SendMessage";
-import DataTable from "./components/results/data-table";
-import { columns } from "./components/results/columns";
+import SelectProgram from "./components/SelectProgram";
+import Results from "./components/results/Results";
 
 export default function Home() {
   return (
     <div className="space-y-10">
-      <SendMessage />
-      <DataTable data={[]} columns={columns} />
-
+      {/* <SendMessage /> */}
+      <SelectProgram />
+      <Results />
     </div>
   );
 }
