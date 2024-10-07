@@ -24,7 +24,7 @@ const data: Result[] = [
 ]
 
 export interface ResultsConfig {
-  results: {
+  resultsConfig: {
     id: number
     type: string
   }[],
@@ -36,7 +36,7 @@ const Results = () => {
     convertResponse(
       "0,0.259,0,0.261,0,0.258,0,0.260,0,0.260",
       {
-        results: [
+        resultsConfig: [
           { id: 0, type: "judgement" },
           { id: 0, type: "measurement" },
           { id: 1, type: "judgement" },
@@ -52,12 +52,32 @@ const Results = () => {
     rawString: string,
     config: ResultsConfig
   ) => {
-    const { results, separator } = config
+    const { resultsConfig, separator } = config
     const values = rawString.split(separator)
     console.log(values)
 
-    let data = []
-    let resultId = results[0].id
+    let data: Result[] = resultsConfig.reduce((acc, item, index) => {
+      let group = acc.find((g) => g.id === item.id)
+      if (!group) {
+        group = { id: item.id }
+        if (group) acc.push(group)
+      }
+      return acc
+    }, [] as Result[])
+
+    values.forEach((value, index) => {
+      const element = data.find(g => g.id === resultsConfig[index].id)
+      if (!element) return
+      console.log(element, resultsConfig[index])
+      const { type } = resultsConfig[index]
+      if (type === "measurement") element.value = +value
+      if (type === "judgement") element.judgement = value == '0' ? 'go' : 'nogo'
+
+    })
+
+
+
+    console.log(data)
 
 
   }
