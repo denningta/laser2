@@ -5,6 +5,7 @@ import { ThemeProvider } from "./components/theme-provider";
 import Sidebar from "./components/SideBar";
 import { Toaster } from "@/components/ui/sonner";
 import Navigation from "./components/Navigation";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,12 +39,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="mr-[80px] p-6 space-y-8">
-            <Navigation />
-            {children}
-          </div>
-          <Sidebar />
-          <Toaster />
+          <TooltipProvider>
+            <div className="mr-[80px] p-6 space-y-8">
+              <Navigation />
+              {children}
+            </div>
+            <Sidebar />
+            <Toaster />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,27 +1,9 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { columns, Result } from "./columns"
 import DataTable from "./data-table"
 
-
-const data: Result[] = [
-  {
-    id: 1,
-    value: 0.268,
-    judgement: 'go'
-  },
-  {
-    id: 2,
-    value: 0.271,
-    judgement: 'nogo'
-  },
-  {
-    id: 3,
-    value: 0.267,
-    judgement: 'go'
-  }
-]
 
 export interface ResultsConfig {
   resultsConfig: {
@@ -32,6 +14,8 @@ export interface ResultsConfig {
 }
 
 const Results = () => {
+  const [data, setData] = useState<Result[]>([])
+
   useEffect(() => {
     convertResponse(
       "0,0.259,0,0.261,0,0.258,0,0.260,0,0.260",
@@ -41,6 +25,10 @@ const Results = () => {
           { id: 0, type: "measurement" },
           { id: 1, type: "judgement" },
           { id: 1, type: "measurement" },
+          { id: 2, type: "judgement" },
+          { id: 2, type: "measurement" },
+          { id: 3, type: "judgement" },
+          { id: 3, type: "measurement" },
         ],
         separator: ","
       },
@@ -56,8 +44,8 @@ const Results = () => {
     const values = rawString.split(separator)
     console.log(values)
 
-    let data: Result[] = resultsConfig.reduce((acc, item, index) => {
-      let group = acc.find((g) => g.id === item.id)
+    let data: Result[] = resultsConfig.reduce((acc, item) => {
+      let group: any = acc.find((g) => g.id === item.id)
       if (!group) {
         group = { id: item.id }
         if (group) acc.push(group)
@@ -65,21 +53,15 @@ const Results = () => {
       return acc
     }, [] as Result[])
 
-    values.forEach((value, index) => {
-      const element = data.find(g => g.id === resultsConfig[index].id)
-      if (!element) return
-      console.log(element, resultsConfig[index])
-      const { type } = resultsConfig[index]
-      if (type === "measurement") element.value = +value
-      if (type === "judgement") element.judgement = value == '0' ? 'go' : 'nogo'
-
+    values.forEach((value, valueIndex) => {
+      const config = resultsConfig[valueIndex]
+      if (!config) return
+      const dataIndex = data.findIndex((el) => el.id === config.id)
+      if (config.type === "judgement") data[dataIndex].judgement = value == '0' ? 'go' : 'nogo'
+      if (config.type === "measurement") data[dataIndex].value = +value
     })
 
-
-
-    console.log(data)
-
-
+    setData(data)
   }
 
   return (

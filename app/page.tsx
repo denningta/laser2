@@ -1,6 +1,7 @@
 import SendMessage from "./components/SendMessage";
 import SelectProgram from "./components/SelectProgram";
 import Results from "./components/results/Results";
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       {/* <SendMessage /> */}
       <SelectProgram />
       <Results />
+      <Footer />
     </div>
   );
 }

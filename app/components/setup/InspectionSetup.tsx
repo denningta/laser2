@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import useStore from "@/app/hooks/useStore"
+import { useRouter } from "next/navigation"
+import { Row } from "@tanstack/react-table"
 
 const formSchema = z.object({
   id: z.string(),
@@ -21,6 +23,7 @@ const formSchema = z.object({
 const InspectionSetup = () => {
   const [programs, setPrograms] = useState<InspectionProgram[]>([])
   const { get, set } = useStore()
+  const router = useRouter()
 
   useEffect(() => {
     loadPrograms()
@@ -65,7 +68,8 @@ const InspectionSetup = () => {
     }
   }
 
-  const onSubmit = () => {
+  const handleRowClick = (row: Row<InspectionProgram>) => {
+    router.push(`/settings/${row.original.id}`)
 
   }
 
@@ -123,6 +127,7 @@ const InspectionSetup = () => {
       <DataTable
         columns={getColumns({ handleDelete: deleteProgram })}
         data={programs}
+        onRowClick={handleRowClick}
       />
     </div>
   )
